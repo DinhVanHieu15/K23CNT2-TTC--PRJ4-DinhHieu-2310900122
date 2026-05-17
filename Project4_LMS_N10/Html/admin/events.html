@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý sự kiện</title>
+
+ 
+<!-- <link rel="stylesheet" href="/CSS/admin/events.css"> -->
+</head>
+    <style>
+        body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fff;
+}
+
+.content {
+    padding: 40px;
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    font-size: 28px;
+    background: linear-gradient(90deg, #22c1c3, #fdbb2d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* INPUT + BUTTON */
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.actions input {
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: none;
+    background: #1e293b;
+    color: white;
+    outline: none;
+}
+
+.btn-add {
+    background: linear-gradient(90deg, #22c1c3, #fdbb2d);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-add:hover {
+    transform: scale(1.05);
+}
+
+/* TABLE */
+.table-container {
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: rgba(255,255,255,0.1);
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+}
+
+tr {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* BUTTON */
+.btn-edit {
+    background: #3b82f6;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+}
+
+.btn-delete {
+    background: #ef4444;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+}
+
+.btn-edit:hover {
+    background: #2563eb;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+}
+    </style>
+<body>
+
+<div class="content">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>📅 Quản lý sự kiện</h1>
+
+        <div class="actions">
+            <input id="eventName" placeholder="Tên sự kiện...">
+            <button class="btn-add" onclick="addEvent()">+ Thêm</button>
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên sự kiện</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+
+            <tbody id="eventList"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+
+// LOAD DATA
+async function loadEvents(){
+    let res = await fetch("http://127.0.0.1:5001/api/events");
+    let data = await res.json();
+
+    let html = "";
+
+    data.forEach(e => {
+        html += `
+        <tr>
+            <td>${e.id}</td>
+            <td>${e.name}</td>
+            <td>
+                <button class="btn-edit">Sửa</button>
+                <button class="btn-delete" onclick="deleteEvent(${e.id})">Xóa</button>
+            </td>
+        </tr>`;
+    });
+
+    document.getElementById("eventList").innerHTML = html;
+}
+
+// ADD
+async function addEvent(){
+    let name = document.getElementById("eventName").value;
+
+    if(!name){
+        alert("Nhập tên sự kiện!");
+        return;
+    }
+
+    await fetch("http://127.0.0.1:5001/api/events",{
+        method:"POST",
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({name:name})
+    });
+
+    document.getElementById("eventName").value = "";
+    loadEvents();
+}
+
+// DELETE
+async function deleteEvent(id){
+    if(confirm("Xóa sự kiện này?")){
+        await fetch(`http://127.0.0.1:5001/api/events/${id}`,{
+            method:"DELETE"
+        });
+        loadEvents();
+    }
+}
+
+loadEvents();
+
+</script>
+
+</body>
+</html>

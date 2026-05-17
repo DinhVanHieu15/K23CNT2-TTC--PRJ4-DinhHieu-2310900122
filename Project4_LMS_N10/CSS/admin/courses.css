@@ -1,0 +1,113 @@
+/* ===== BACKGROUND ===== */
+.content {
+    padding: 30px;
+    background: linear-gradient(135deg, #1e1e3f, #2b2b5a);
+    min-height: 100vh;
+    color: white;
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    font-size: 28px;
+}
+
+/* ADD BUTTON */
+.btn-add {
+    background: linear-gradient(45deg, #00c6ff, #ff00cc);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-add:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #ff00cc;
+}
+
+/* TABLE */
+.course-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 15px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+}
+
+/* HEADER TABLE */
+.course-table th {
+    background: rgba(0,0,0,0.4);
+    padding: 15px;
+}
+
+/* BODY */
+.course-table td {
+    padding: 15px;
+}
+
+/* HOVER */
+.course-table tr:hover {
+    background: rgba(255,255,255,0.1);
+    transform: scale(1.01);
+    transition: 0.2s;
+}
+.course-table td:nth-child(3) {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* BUTTON */
+.btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    margin-right: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* EDIT */
+.edit {
+    background: #00c6ff;
+}
+
+/* DELETE */
+.delete {
+    background: #ff4d6d;
+}
+
+/* DETAIL */
+.detail {
+    background: #9b5de5;
+}
+
+/* HOVER BUTTON */
+.btn:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 10px white;
+}
+
+/* CĂN CHUẨN CỘT */
+.course-table th:nth-child(2),
+.course-table td:nth-child(2) {
+    text-align: center;
+    width: 150px;
+}
+
+.course-table th:nth-child(3),
+.course-table td:nth-child(3) {
+    text-align: center;
+    width: 220px;
+}

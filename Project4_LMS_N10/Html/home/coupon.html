@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Kho Ưu Đãi | Cyber-LMS Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../CSS/coupon.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo" onclick="location.href='index.html'">CODELEARN</div>
+    <ul class="menu">
+        <li onclick="location.href='index.html'">Trang chủ</li>
+        <li onclick="location.href='learning.html'">Học tập</li>
+        <li onclick="location.href='training.html'">Luyện tập</li> 
+        <li onclick="location.href='order-history.html'">Lịch Sử Đơn Hàng</li>
+        <li onclick="location.href='event.html'">Sự kiện</li>
+        <li onclick="location.href='about.html'">Giới thiệu</li>
+        <li onclick="location.href='coupon.html'" class="active">Mã giảm giá</li>
+    </ul>
+    <div class="auth" id="nav-auth"></div>
+</nav>
+
+<div class="container">
+    
+    <!-- TRÒ CHƠI HACK MÃ -->
+    <section class="game-section">
+        <h2 class="game-title">Cyber Hack Reward</h2>
+        <p style="color: #aaa; margin-bottom: 20px;">Xâm nhập hệ thống để lấy mã giảm giá ngẫu nhiên</p>
+        
+        <div class="hack-display" id="hackResult">??????</div>
+        
+        <button class="btn-hack" id="hackBtn" onclick="startHack()">BẮT ĐẦU HACK</button>
+        <p id="hackStatus" style="margin-top: 15px; color: var(--primary); font-family: monospace; font-size: 13px; min-height: 20px;"></p>
+    </section>
+
+    <!-- KHO MÃ CÁ NHÂN (CÓ NÚT XÓA) -->
+    <h3 class="list-header my-codes">Mã của tôi</h3>
+    <div class="coupon-grid" id="myCouponsList">
+        <p class="empty-text">Bạn chưa hack được mã nào. Hãy thử vận may ở trên!</p>
+    </div>
+
+    <!-- MÃ HỆ THỐNG CÔNG KHAI -->
+    <h3 class="list-header">Ưu đãi cộng đồng</h3>
+    <div class="coupon-grid">
+        <div class="coupon-card">
+            <div class="coupon-val">10% OFF</div>
+            <span class="coupon-code-label">SALE10</span>
+            <p class="coupon-info">Áp dụng cho tất cả các khóa học Web và Python cơ bản.</p>
+            <button class="btn-copy" onclick="copyCode('SALE10')" style="width: 100%;">SAO CHÉP MÃ</button>
+        </div>
+        <div class="coupon-card">
+            <div class="coupon-val">50% OFF</div>
+            <span class="coupon-code-label">NEWBIE50</span>
+            <p class="coupon-info">Dành riêng cho đơn hàng đầu tiên của học viên mới.</p>
+            <button class="btn-copy" onclick="copyCode('NEWBIE50')" style="width: 100%;">SAO CHÉP MÃ</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. ĐỒNG BỘ HEADER
+    function syncHeader() {
+        const userStr = localStorage.getItem('user');
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const authDiv = document.getElementById('nav-auth');
+        if (userStr) {
+            const user = JSON.parse(userStr);
+            authDiv.innerHTML = `
+                <div class="cart-wrapper" onclick="location.href='cart.html'">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge">${cart.length}</span>
+                </div>
+                <span class="user-info">Chào, ${user.username}</span>
+                <span style="color:rgba(255,255,255,0.2); margin: 0 5px;">|</span>
+                <button class="btn-logout-nav" onclick="handleLogout()">Đăng xuất</button>
+            `;
+        }
+    }
+
+    function handleLogout() { localStorage.removeItem('user'); location.reload(); }
+
+    // 2. LOGIC TRÒ CHƠI
+    const couponPool = [
+        { code: 'NEON90', desc: 'Giảm cực sốc 90% toàn hệ thống' },
+        { code: 'G10VIP', desc: 'Giảm 70% và tặng bộ tài liệu VIP' },
+        { code: 'HACKER30', desc: 'Giảm 30% cho khóa học Pro' },
+        { code: 'PRO500', desc: 'Giảm thẳng 500k cho đơn từ 2 triệu' }
+    ];
+
+    function startHack() {
+        const btn = document.getElementById('hackBtn');
+        const display = document.getElementById('hackResult');
+        const status = document.getElementById('hackStatus');
+        
+        btn.disabled = true;
+        status.innerText = "> Đang giải mã Database...";
+        display.style.color = "var(--secondary)";
+
+        let count = 0;
+        const interval = setInterval(() => {
+            display.innerText = Math.random().toString(36).substring(2, 8).toUpperCase();
+            count++;
+            if(count > 20) {
+                clearInterval(interval);
+                const prize = couponPool[Math.floor(Math.random() * couponPool.length)];
+                display.innerText = prize.code;
+                display.style.color = "#00ff00";
+                status.innerText = "> Hack thành công! Mã đã nằm trong kho của bạn.";
+                saveCoupon(prize);
+                btn.disabled = false;
+            }
+        }, 80);
+    }
+
+    // 3. LOGIC LƯU TRỮ VÀ XÓA MÃ
+    function saveCoupon(couponObj) {
+        let myCoupons = JSON.parse(localStorage.getItem('myCoupons')) || [];
+        // Chỉ lưu nếu mã chưa tồn tại
+        if (!myCoupons.find(c => c.code === couponObj.code)) {
+            myCoupons.push(couponObj);
+            localStorage.setItem('myCoupons', JSON.stringify(myCoupons));
+        }
+        renderMyCoupons();
+    }
+
+    // Hàm xóa mã
+    function deleteCoupon(code) {
+        if(confirm(`Bạn có chắc chắn muốn xóa mã ${code} không?`)) {
+            let myCoupons = JSON.parse(localStorage.getItem('myCoupons')) || [];
+            myCoupons = myCoupons.filter(c => c.code !== code);
+            localStorage.setItem('myCoupons', JSON.stringify(myCoupons));
+            renderMyCoupons();
+        }
+    }
+
+    function renderMyCoupons() {
+        const list = document.getElementById('myCouponsList');
+        const myCoupons = JSON.parse(localStorage.getItem('myCoupons')) || [];
+
+        if (myCoupons.length === 0) {
+            list.innerHTML = `<p class="empty-text">Bạn chưa hack được mã nào. Hãy thử vận may ở trên!</p>`;
+            return;
+        }
+
+        list.innerHTML = myCoupons.map(c => `
+            <div class="coupon-card mine">
+                <div class="coupon-val">HACKED</div>
+                <span class="coupon-code-label">${c.code}</span>
+                <p class="coupon-info">${c.desc}</p>
+                <div class="btn-group">
+                    <button class="btn-copy" onclick="copyCode('${c.code}')">SAO CHÉP</button>
+                    <button class="btn-delete" onclick="deleteCoupon('${c.code}')" title="Xóa mã này">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function copyCode(code) {
+        navigator.clipboard.writeText(code).then(() => alert("Đã sao chép: " + code));
+    }
+
+    window.onload = () => {
+        syncHeader();
+        renderMyCoupons();
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: white;
+}
+
+.content {
+    padding: 40px;
+}
+
+/* HEADER */
+.header h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, #22c1c3, #fdbb2d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* TABLE */
+.table-container {
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: rgba(255,255,255,0.1);
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+}
+
+tr {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* STATUS */
+.status {
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.status.pending {
+    background: orange;
+}
+
+.status.paid {
+    background: green;
+}
+
+.status.cancel {
+    background: red;
+}
+
+/* SELECT */
+select {
+    padding: 5px;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+/* DELETE BUTTON */
+.btn-delete {
+    background: #ef4444;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+}

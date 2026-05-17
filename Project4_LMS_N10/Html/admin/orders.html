@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý đơn hàng</title>
+
+<link rel="stylesheet" href="/CSS/admin/orders.css">
+</head>
+
+<body>
+
+<div class="content">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>🧾 Quản lý đơn hàng</h1>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Khách hàng</th>
+                    <th>Khóa học</th>
+                    <th>Giá</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+
+            <tbody id="orderList"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+
+const orderList = document.getElementById("orderList");
+
+// LOAD
+async function loadOrders(){
+    let res = await fetch("http://127.0.0.1:5001/api/orders");
+    let data = await res.json();
+
+    let html = "";
+
+    data.forEach(o=>{
+        html += `
+        <tr>
+            <td>${o.id}</td>
+            <td>${o.username}</td>
+            <td>${o.course_name}</td>
+            <td>${o.price}đ</td>
+            <td>
+                <span class="status ${o.status}">
+                    ${o.status}
+                </span>
+            </td>
+            <td>
+                <select onchange="updateStatus(${o.id}, this.value)">
+                    <option value="pending" ${o.status=="pending"?"selected":""}>Chờ</option>
+                    <option value="paid" ${o.status=="paid"?"selected":""}>Đã thanh toán</option>
+                    <option value="cancel" ${o.status=="cancel"?"selected":""}>Hủy</option>
+                </select>
+
+                <button class="btn-delete" onclick="deleteOrder(${o.id})">Xóa</button>
+            </td>
+        </tr>`;
+    });
+
+    orderList.innerHTML = html;
+}
+
+// UPDATE STATUS
+async function updateStatus(id, status){
+    await fetch(`http://127.0.0.1:5001/api/orders/${id}`,{
+        method:"PUT",
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({status:status})
+    });
+
+    loadOrders();
+}
+
+// DELETE
+async function deleteOrder(id){
+    if(confirm("Xóa đơn hàng này?")){
+        await fetch(`http://127.0.0.1:5001/api/orders/${id}`,{
+            method:"DELETE"
+        });
+        loadOrders();
+    }
+}
+
+loadOrders();
+
+</script>
+
+</body>
+</html>

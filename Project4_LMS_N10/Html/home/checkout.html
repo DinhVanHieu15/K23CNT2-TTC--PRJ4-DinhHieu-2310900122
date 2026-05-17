@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh Toán An Toàn | Cyber-LMS Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../CSS/checkout.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo" onclick="location.href='index.html'">CODELEARN</div>
+    <a href="cart.html" class="back-link"><i class="fas fa-chevron-left"></i> Quay lại giỏ hàng</a>
+</nav>
+
+<div class="checkout-steps">
+    <div class="step done"><div class="step-circle"><i class="fas fa-check"></i></div> GIỎ HÀNG</div>
+    <div class="step active"><div class="step-circle">2</div> THANH TOÁN</div>
+    <div class="step"><div class="step-circle">3</div> HOÀN TẤT</div>
+</div>
+
+<div class="container">
+    <main>
+        <div class="section-box">
+            <h2><i class="fas fa-user-circle"></i> Thông tin học viên</h2>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Họ và Tên</label>
+                    <input type="text" id="user_name" placeholder="Nguyễn Mạnh Tuấn">
+                </div>
+                <div class="input-group">
+                    <label>Email liên hệ</label>
+                    <input type="email" id="user_email" placeholder="tuan@example.com">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Số điện thoại</label>
+                <input type="text" id="user_phone" placeholder="09xx xxx xxx">
+            </div>
+        </div>
+
+        <div class="section-box">
+            <h2><i class="fas fa-wallet"></i> Phương thức thanh toán</h2>
+            <div class="payment-options">
+                <div class="pay-card active" onclick="switchPay('bank', this)">
+                    <i class="fas fa-university"></i>
+                    <strong>Ngân hàng</strong>
+                </div>
+                <div class="pay-card" onclick="switchPay('momo', this)">
+                    <i class="fas fa-mobile-alt"></i>
+                    <strong>Ví MoMo</strong>
+                </div>
+            </div>
+
+            <div class="qr-display">
+                <p id="pay-text" style="font-size: 14px; opacity: 0.7; margin-bottom: 15px;">Quét mã QR để chuyển khoản Vietcombank</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=CyberLMS_Tuấn" id="qr-img">
+                <p style="font-size: 13px; margin-top: 10px;">Nội dung thanh toán:</p>
+                <div class="order-code" id="order-id">LMS9999</div>
+            </div>
+        </div>
+    </main>
+
+  <aside>
+    <div class="summary-card">
+        <h3>Đơn hàng của bạn</h3>
+        
+        <div id="order-list"></div>
+
+        <!-- 🔥 MÃ GIẢM GIÁ -->
+        <div class="coupon-box">
+            <input id="couponCode" placeholder="Nhập mã giảm giá...">
+            <button onclick="applyCoupon()">Áp dụng</button>
+        </div>
+
+        <div id="discountInfo" class="discount-info"></div>
+
+        <!-- 💰 TỔNG TIỀN -->
+        <div class="total-price">
+            <span>Tổng tiền:</span>
+            <span id="total-amount" style="color: var(--primary);">0 đ</span>
+        </div>
+
+        <button class="btn-confirm" onclick="processCheckout()">XÁC NHẬN THANH TOÁN</button>
+
+        <p style="text-align: center; font-size: 11px; color: #777; margin-top: 15px;">
+            <i class="fas fa-lock"></i> Thanh toán an toàn qua cổng CyberPay
+        </p>
+    </div>
+</aside>
+</div>
+
+<script>
+    // 1. Tải đơn hàng từ giỏ hàng
+    function initCheckout() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const container = document.getElementById('order-list');
+        const totalDisp = document.getElementById('total-amount');
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if(user) document.getElementById('user_name').value = user.username;
+        if(cart.length === 0) {
+            alert("Giỏ hàng trống!"); window.location.href = 'learning.html'; return;
+        }
+
+        let total = 0;
+        container.innerHTML = cart.map(item => {
+            total += parseInt(item.price);
+            return `<div class="order-item"><span>${item.title}</span><b>${Number(item.price).toLocaleString('vi-VN')} đ</b></div>`;
+        }).join('');
+
+        totalDisp.innerText = total.toLocaleString('vi-VN') + " đ";
+        document.getElementById('order-id').innerText = "LMS" + Math.floor(1000 + Math.random() * 8999);
+    }
+
+    // 2. Đổi QR
+    function switchPay(type, el) {
+        document.querySelectorAll('.pay-card').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        const txt = document.getElementById('pay-text');
+        const img = document.getElementById('qr-img');
+
+        if(type === 'momo') {
+            txt.innerText = "Mở MoMo quét mã để thanh toán";
+            img.src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Momo_Payment";
+        } else {
+            txt.innerText = "Quét mã QR để chuyển khoản Ngân hàng";
+            img.src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Bank_Payment";
+        }
+    }
+
+    // 3. Xử lý thanh toán + Lưu lịch sử
+    function processCheckout() {
+        if(!document.getElementById('user_name').value) { alert("Nhập tên nhé!"); return; }
+
+        const cart = JSON.parse(localStorage.getItem('cart'));
+        const total = document.getElementById('total-amount').innerText;
+        const id = document.getElementById('order-id').innerText;
+
+        // Lưu vào History
+        const order = { id, total, date: new Date().toLocaleString('vi-VN'), items: cart, status: 'Hoàn tất' };
+        let history = JSON.parse(localStorage.getItem('orderHistory')) || [];
+        history.unshift(order);
+        localStorage.setItem('orderHistory', JSON.stringify(history));
+
+        const btn = document.querySelector('.btn-confirm');
+        btn.innerText = "ĐANG XÁC THỰC...";
+        btn.disabled = true;
+
+        setTimeout(() => {
+            alert("🎉 Thanh toán thành công! Chúc bạn học tốt.");
+            localStorage.removeItem('cart');
+            window.location.href = 'index.html';
+        }, 1500);
+    }
+
+    window.onload = initCheckout;
+</script>
+</body>
+</html>

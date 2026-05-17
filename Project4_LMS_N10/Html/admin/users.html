@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý khách hàng</title>
+
+<link rel="stylesheet" href="/CSS/admin/users.css">
+</head>
+
+<body>
+
+<div class="content">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>👤 Quản lý khách hàng</h1>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tài khoản</th>
+                    <th>Role</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+
+            <tbody id="userList"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+
+const userList = document.getElementById("userList");
+
+// LOAD USER
+async function loadUsers(){
+    let res = await fetch("http://127.0.0.1:5001/api/users");
+    let data = await res.json();
+
+    let html = "";
+
+    data.forEach(u=>{
+        html += `
+        <tr>
+            <td>${u.id}</td>
+            <td>${u.username}</td>
+            <td>${u.role}</td>
+            <td>
+                <span class="${u.is_active ? 'active' : 'inactive'}">
+                    ${u.is_active ? "Hoạt động" : "Bị khóa"}
+                </span>
+            </td>
+            <td>
+                <button class="btn-lock"
+                    onclick="toggleUser(${u.id}, ${u.is_active})">
+                    ${u.is_active ? "Khóa" : "Mở"}
+                </button>
+            </td>
+        </tr>`;
+    });
+
+    userList.innerHTML = html;
+}
+
+// KHÓA / MỞ USER
+async function toggleUser(id, currentStatus){
+
+    let confirmMsg = currentStatus 
+        ? "Khóa tài khoản này?" 
+        : "Mở lại tài khoản này?";
+
+    if(confirm(confirmMsg)){
+        await fetch(`http://127.0.0.1:5001/api/users/${id}`,{
+            method:"PUT"
+        });
+
+        loadUsers();
+    }
+}
+
+loadUsers();
+
+</script>
+
+</body>
+</html>

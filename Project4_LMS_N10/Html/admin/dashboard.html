@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin</title>
+
+    <!-- ICON -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CHART -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../CSS/dashboard.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2>ADMIN</h2>
+
+        <ul class="menu">
+            <li onclick="go('dashboard')">Dashboard</li>
+            <li onclick="go('courses')">Khóa học</li>
+            <li onclick="go('training')">Luyện tập</li>
+            <li onclick="go('events')">Sự kiện</li>
+            <li onclick="go('vouchers')">Mã giảm giá</li>
+            <li onclick="go('users')">Khách hàng</li>
+            <li onclick="go('orders')">Đơn hàng</li>
+        </ul>
+
+        <div class="logout" onclick="logout()">Đăng xuất</div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <div class="top">
+            <h1>Dashboard</h1>
+            <div>Xin chào, <b id="name"></b></div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats">
+            <div class="card">
+                <i class="fas fa-users"></i>
+                <h2>120</h2>
+                <p>Học viên</p>
+            </div>
+
+            <div class="card">
+                <i class="fas fa-book"></i>
+                <h2>25</h2>
+                <p>Khóa học</p>
+            </div>
+
+            <div class="card">
+                <i class="fas fa-file"></i>
+                <h2>40</h2>
+                <p>Bài thi</p>
+            </div>
+
+            <div class="card">
+                <i class="fas fa-chart-line"></i>
+                <h2>50Tr</h2>
+                <p>Doanh thu</p>
+            </div>
+        </div>
+
+        <!-- CHART -->
+        <div class="chart">
+            <h3>Doanh thu</h3>
+            <canvas id="chart"></canvas>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    // CHECK LOGIN
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user || user.role !== "admin") {
+        alert("Không có quyền!");
+        window.location.href = "../account/login.html";
+    }
+
+    document.getElementById("name").innerText = user.username;
+
+    // LOGOUT
+    function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "../account/login.html";
+    }
+
+    // NAV
+    function go(page) {
+        window.location.href = page + ".html";
+    }
+
+    // CHART
+    const ctx = document.getElementById('chart');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['T1','T2','T3','T4','T5','T6'],
+            datasets: [{
+                label: 'Doanh thu',
+                data: [5, 10, 8, 15, 20, 30],
+                borderColor: '#00d2ff',
+                backgroundColor: 'rgba(0,210,255,0.2)',
+                fill: true,
+                tension: 0.4
+            }]
+        }
+    });
+
+</script>
+
+</body>
+</html>

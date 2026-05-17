@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch Sử Đơn Hàng | Cyber-LMS Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../CSS/order-history.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo" onclick="location.href='index.html'">CODELEARN</div>
+    <ul class="menu">
+        <li onclick="location.href='index.html'">Trang chủ</li>
+        <li onclick="location.href='learning.html'">Học tập</li>
+        <li onclick="location.href='training.html'">Luyện tập</li> 
+        <li onclick="location.href='order-history.html'" style="color: var(--primary)">Lịch Sử Đơn Hàng</li>
+        <li onclick="location.href='event.html'">Sự kiện</li>
+        <li onclick="location.href='about.html'">Giới thiệu</li>
+        <li onclick="location.href='coupon.html'">Mã giảm giá</li>
+    </ul>
+    <div class="auth" id="nav-auth"></div>
+</nav>
+
+<div class="container">
+    <div class="header-section">
+        <div>
+            <p style="color: var(--primary); font-weight: 800; font-size: 14px; text-transform: uppercase;">Tài khoản học viên</p>
+            <h1>Lịch sử đơn hàng</h1>
+        </div>
+        <button class="btn-view" onclick="location.href='learning.html'">Tiếp tục học tập</button>
+    </div>
+
+    <div class="history-table-container">
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>Mã Đơn</th>
+                    <th>Ngày Mua</th>
+                    <th>Khóa Học</th>
+                    <th>Tổng Tiền</th>
+                    <th>Trạng Thái</th>
+                </tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+        </table>
+        <div id="emptyMsg" class="empty-state" style="display: none;">
+            <i class="fas fa-box-open"></i>
+            <p style="font-size: 18px;">Bạn chưa có đơn hàng nào!</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hàm tải dữ liệu lịch sử từ localStorage
+    function loadHistory() {
+        const history = JSON.parse(localStorage.getItem('orderHistory')) || [];
+        const body = document.getElementById('historyBody');
+        const emptyMsg = document.getElementById('emptyMsg');
+        const table = document.getElementById('historyTable');
+
+        if (history.length === 0) {
+            table.style.display = 'none';
+            emptyMsg.style.display = 'block';
+            return;
+        }
+
+        body.innerHTML = history.map(order => `
+            <tr>
+                <td style="font-weight: 800; color: #fff;">#${order.id}</td>
+                <td style="color: #999;">${order.date}</td>
+                <td>
+                    <ul class="order-items-list">
+                        ${order.items.map(item => `<li>${item.title}</li>`).join('')}
+                    </ul>
+                </td>
+                <td style="font-weight: 800; color: var(--primary); font-size: 16px;">${order.total}</td>
+                <td><span class="status-badge status-success">${order.status || 'Thành công'}</span></td>
+            </tr>
+        `).join('');
+    }
+
+    // Hàm đồng bộ Header (Thêm Giỏ hàng)
+    function syncHeader() {
+        const userStr = localStorage.getItem('user');
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const navAuth = document.getElementById('nav-auth');
+
+        if (userStr) {
+            const user = JSON.parse(userStr);
+            navAuth.innerHTML = `
+                <div class="cart-wrapper" onclick="location.href='cart.html'">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge">${cart.length}</span>
+                </div>
+                <span class="user-info">Chào, ${user.username}</span>
+                <span class="separator">|</span>
+                <button class="btn-logout-nav" onclick="handleLogout()">Đăng xuất</button>
+            `;
+        } else {
+            navAuth.innerHTML = `<a href="../account/login.html" style="color:#fff; text-decoration:none; font-weight:700; font-size:15px;">Đăng nhập</a>`;
+        }
+    }
+
+    function handleLogout() {
+        localStorage.removeItem('user');
+        location.href = 'index.html';
+    }
+
+    window.onload = () => {
+        syncHeader();
+        loadHistory();
+    };
+</script>
+</body>
+</html>

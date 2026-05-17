@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý luyện tập</title>
+<link rel="stylesheet" href="../../CSS/admin/training.css">
+</head>
+
+<body>
+
+<div class="training-container">
+
+    <div class="training-header">
+        <h1>🧠 Quản lý bài luyện tập</h1>
+
+        <div class="training-form">
+            <input id="quizName" placeholder="Tên bài...">
+            <input id="time" placeholder="Thời gian (phút)">
+            <button onclick="addQuiz()">+ Thêm</button>
+        </div>
+    </div>
+
+    <table class="training-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên bài</th>
+                <th>Thời gian</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody id="quizList"></tbody>
+    </table>
+    
+</div>
+
+</body>
+</html>
