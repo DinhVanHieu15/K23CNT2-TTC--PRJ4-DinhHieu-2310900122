@@ -22,7 +22,6 @@ async function performLogin(username, password) {
             // 2. Lấy Role và làm sạch dữ liệu
             const role = data.user.role.toString().trim().toLowerCase();
 
-<<<<<<< HEAD
             // 3. PHÂN LUỒNG REDIRECT THÔNG MINH
             if (role === "admin") {
                 alert("Chào Admin ! Đang chuyển hướng vào hệ thống quản trị...");
@@ -45,20 +44,3 @@ async function performLogin(username, password) {
         alert("Server Python chưa chạy hoặc sai cổng 5000 rồi !");
     }
 }
-=======
-// ================= REGISTER =================
-function handleRegister() {
-    alert("Đăng ký thành công!");
-
-    // chuyển sang trang login
-    window.location.href = "login.html";
-}
-
-// ================= LOGIN =================
-function handleLogin() {
-    alert("Đăng nhập thành công!");
-
-    // chuyển sang trang sản phẩm (sau này là dashboard)
-    window.location.href = "../home/index.html";
-}
->>>>>>> 51ca7df891592d6706aa8a7b444c134ad2f10209

@@ -2,127 +2,77 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin</title>
-
-    <!-- ICON -->
+    <title>Dashboard Admin | DHTA ACADEMY</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- CHART -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="../../CSS/dashboard.css">
+    <link rel="stylesheet" href="/CSS/admin.css">
 </head>
-
 <body>
-
-<div class="layout">
-
-    <!-- SIDEBAR -->
-    <div class="sidebar">
+    <aside class="sidebar">
         <h2>ADMIN</h2>
+        <nav class="sidebar-nav" id="admin-nav">
+            <a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="courses.html"><i class="fas fa-book"></i> Khóa học</a>
+            <a href="training.html"><i class="fas fa-code"></i> Luyện tập</a>
+            <a href="events.html"><i class="fas fa-calendar-alt"></i> Sự kiện</a>
+            <a href="vouchers.html"><i class="fas fa-ticket-alt"></i> Mã giảm giá</a>
+            <a href="users.html"><i class="fas fa-users"></i> Khách hàng</a>
+          <a href="/Html/admin/orders.html"><i class="fas fa-shopping-cart"></i> Đơn hàng</a>
+            <div style="height: 1px; background: rgba(255,255,255,0.05); margin: 20px 0;"></div>
+            <a href="../home/index.html"><i class="fas fa-home"></i> Trang chủ</a>
+            <a href="javascript:void(0)" onclick="logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+        </nav>
+    </aside>
 
-        <ul class="menu">
-            <li onclick="go('dashboard')">Dashboard</li>
-            <li onclick="go('courses')">Khóa học</li>
-            <li onclick="go('training')">Luyện tập</li>
-            <li onclick="go('events')">Sự kiện</li>
-            <li onclick="go('vouchers')">Mã giảm giá</li>
-            <li onclick="go('users')">Khách hàng</li>
-            <li onclick="go('orders')">Đơn hàng</li>
-        </ul>
-
-        <div class="logout" onclick="logout()">Đăng xuất</div>
-    </div>
-
-    <!-- CONTENT -->
-    <div class="content">
-
-        <div class="top">
-            <h1>Dashboard</h1>
-            <div>Xin chào, <b id="name"></b></div>
-        </div>
-
-        <!-- STATS -->
-        <div class="stats">
-            <div class="card">
-                <i class="fas fa-users"></i>
-                <h2>120</h2>
-                <p>Học viên</p>
+    <main class="main-content">
+        <header class="page-header"><h1 class="page-title">HỆ THỐNG QUẢN TRỊ</h1></header>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;">
+            <div class="stat-card" style="background:var(--glass); padding:25px; border-radius:20px; border:1px solid var(--border); text-align:center;">
+                <i class="fas fa-user-graduate" style="color:var(--cyan); font-size:30px;"></i>
+                <h2 id="v-u" style="font-size:32px; margin:10px 0;">0</h2><p style="color:#888; font-size:12px;">HỌC VIÊN</p>
             </div>
-
-            <div class="card">
-                <i class="fas fa-book"></i>
-                <h2>25</h2>
-                <p>Khóa học</p>
+            <div class="stat-card" style="background:var(--glass); padding:25px; border-radius:20px; border:1px solid var(--border); text-align:center;">
+                <i class="fas fa-layer-group" style="color:var(--pink); font-size:30px;"></i>
+                <h2 id="v-c" style="font-size:32px; margin:10px 0;">0</h2><p style="color:#888; font-size:12px;">KHÓA HỌC</p>
             </div>
-
-            <div class="card">
-                <i class="fas fa-file"></i>
-                <h2>40</h2>
-                <p>Bài thi</p>
+            <div class="stat-card" style="background:var(--glass); padding:25px; border-radius:20px; border:1px solid var(--border); text-align:center;">
+                <i class="fas fa-laptop-code" style="color:#2ecc71; font-size:30px;"></i>
+                <h2 id="v-e" style="font-size:32px; margin:10px 0;">0</h2><p style="color:#888; font-size:12px;">BÀI TẬP</p>
             </div>
-
-            <div class="card">
-                <i class="fas fa-chart-line"></i>
-                <h2>50Tr</h2>
-                <p>Doanh thu</p>
+            <div class="stat-card" style="background:var(--glass); padding:25px; border-radius:20px; border:1px solid var(--border); text-align:center;">
+                <i class="fas fa-wallet" style="color:#f1c40f; font-size:30px;"></i>
+                <h2 id="v-r" style="font-size:32px; margin:10px 0;">0</h2><p style="color:#888; font-size:12px;">DOANH THU</p>
             </div>
         </div>
-
-        <!-- CHART -->
-        <div class="chart">
-            <h3>Doanh thu</h3>
-            <canvas id="chart"></canvas>
+        <div class="table-container">
+            <h3 style="margin-bottom:20px;">BIỂU ĐỒ TĂNG TRƯỞNG</h3>
+            <div style="height: 350px;"><canvas id="revenueChart"></canvas></div>
         </div>
+    </main>
 
-    </div>
+    <script>
+        const path = window.location.pathname;
+        document.querySelectorAll('#admin-nav a').forEach(a => { if(path.includes(a.getAttribute('href'))) a.classList.add('active'); });
 
-</div>
+        async function loadDash() {
+            const res = await fetch('http://127.0.0.1:5001/api/admin/dashboard');
+            const d = await res.json();
+            document.getElementById('v-u').innerText = d.users;
+            document.getElementById('v-c').innerText = d.courses;
+            document.getElementById('v-e').innerText = d.exams;
+            document.getElementById('v-r').innerText = d.revenue.toLocaleString() + " đ";
 
-<script>
-
-    // CHECK LOGIN
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    if (!user || user.role !== "admin") {
-        alert("Không có quyền!");
-        window.location.href = "../account/login.html";
-    }
-
-    document.getElementById("name").innerText = user.username;
-
-    // LOGOUT
-    function logout() {
-        localStorage.removeItem("user");
-        window.location.href = "../account/login.html";
-    }
-
-    // NAV
-    function go(page) {
-        window.location.href = page + ".html";
-    }
-
-    // CHART
-    const ctx = document.getElementById('chart');
-
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['T1','T2','T3','T4','T5','T6'],
-            datasets: [{
-                label: 'Doanh thu',
-                data: [5, 10, 8, 15, 20, 30],
-                borderColor: '#00d2ff',
-                backgroundColor: 'rgba(0,210,255,0.2)',
-                fill: true,
-                tension: 0.4
-            }]
+            new Chart(document.getElementById('revenueChart'), {
+                type: 'line',
+                data: {
+                    labels: ['T1','T2','T3','T4','T5','T6'],
+                    datasets: [{ label: 'Triệu VNĐ', data: d.chart, borderColor: '#00f2ff', backgroundColor: 'rgba(0,242,255,0.1)', fill: true, tension: 0.4 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#fff' } } } }
+            });
         }
-    });
-
-</script>
-
+        function logout() { localStorage.removeItem("user"); location.href = "../account/login.html"; }
+        window.onload = loadDash;
+    </script>
 </body>
 </html>

@@ -1,207 +1,173 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>Quản lý sự kiện</title>
-
- 
-<!-- <link rel="stylesheet" href="/CSS/admin/events.css"> -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý sự kiện | Admin DHTA ACADEMY</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="/CSS/admin.css"> 
+    <link rel="stylesheet" href="/CSS/admin/events.css">
 </head>
-    <style>
-        body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    color: #fff;
-}
-
-.content {
-    padding: 40px;
-}
-
-/* HEADER */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-}
-
-.header h1 {
-    font-size: 28px;
-    background: linear-gradient(90deg, #22c1c3, #fdbb2d);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-/* INPUT + BUTTON */
-.actions {
-    display: flex;
-    gap: 10px;
-}
-
-.actions input {
-    padding: 10px 15px;
-    border-radius: 10px;
-    border: none;
-    background: #1e293b;
-    color: white;
-    outline: none;
-}
-
-.btn-add {
-    background: linear-gradient(90deg, #22c1c3, #fdbb2d);
-    border: none;
-    padding: 10px 15px;
-    border-radius: 10px;
-    color: white;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-add:hover {
-    transform: scale(1.05);
-}
-
-/* TABLE */
-.table-container {
-    background: rgba(255,255,255,0.05);
-    padding: 20px;
-    border-radius: 15px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-thead {
-    background: rgba(255,255,255,0.1);
-}
-
-th, td {
-    padding: 15px;
-    text-align: center;
-}
-
-tr {
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-/* BUTTON */
-.btn-edit {
-    background: #3b82f6;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
-}
-
-.btn-delete {
-    background: #ef4444;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
-}
-
-.btn-edit:hover {
-    background: #2563eb;
-}
-
-.btn-delete:hover {
-    background: #dc2626;
-}
-    </style>
 <body>
+    <div class="admin-layout">
+        
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>ADMIN</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/Html/admin/dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a>
+                <a href="/Html/admin/courses.html"><i class="fas fa-book"></i> Khóa học</a>
+                <a href="/Html/admin/training.html"><i class="fas fa-code"></i> Luyện tập</a>
+                <a href="/Html/admin/events.html" class="active"><i class="fas fa-calendar-alt"></i> Sự kiện</a>
+                <a href="/Html/admin/vouchers.html"><i class="fas fa-ticket-alt"></i> Mã giảm giá</a>
+                <a href="/Html/admin/users.html"><i class="fas fa-users"></i> Khách hàng</a>
+                <a href="/Html/admin/orders.html"><i class="fas fa-shopping-cart"></i> Đơn hàng</a>
+                <div style="height: 1px; background: rgba(255,255,255,0.05); margin: 20px 0;"></div>
+                <a href="/Html/home/index.html"><i class="fas fa-home"></i> Trang chủ</a>
+                <a href="javascript:void(0)" onclick="handleLogout()" style="color: #ff3c6d !important;">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </a>
+            </nav>
+        </aside>
 
-<div class="content">
+        <main class="main-content">
+            <header class="content-header">
+                <div class="title-section">
+                    <span class="icon-box">📅</span>
+                    <h1>QUẢN LÝ SỰ KIỆN</h1>
+                </div>
+                
+                <div class="add-event-form">
+                    <input type="text" id="ev-title" placeholder="Tên sự kiện mới...">
+                    <input type="date" id="ev-date">
+                    <select id="ev-status">
+                        <option value="GHI DANH">GHI DANH</option>
+                        <option value="LIVE NOW">LIVE NOW</option>
+                        <option value="ĐÃ KẾT THÚC">ĐÃ KẾT THÚC</option>
+                    </select>
+                    <button class="btn-add-neon" onclick="addEvent()">+ THÊM</button>
+                </div>
+            </header>
 
-    <!-- HEADER -->
-    <div class="header">
-        <h1>📅 Quản lý sự kiện</h1>
-
-        <div class="actions">
-            <input id="eventName" placeholder="Tên sự kiện...">
-            <button class="btn-add" onclick="addEvent()">+ Thêm</button>
-        </div>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>TÊN SỰ KIỆN</th>
+                            <th>NGÀY TỔ CHỨC</th>
+                            <th>TRẠNG THÁI</th>
+                            <th>HÀNH ĐỘNG</th>
+                        </tr>
+                    </thead>
+                    <tbody id="event-list-body">
+                        </tbody>
+                </table>
+            </div>
+        </main>
     </div>
 
-    <!-- TABLE -->
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tên sự kiện</th>
-                    <th>Hành động</th>
-                </tr>
-            </thead>
+    <script>
+        // Đường dẫn API - Dùng tương đối để Flask tự điều hướng
+        const API_URL = "/api/admin/events";
 
-            <tbody id="eventList"></tbody>
-        </table>
-    </div>
+        // 1. Hàm nạp danh sách từ SQL Server
+        async function loadEvents() {
+            const tbody = document.getElementById('event-list-body');
+            try {
+                const res = await fetch(API_URL);
+                const data = await res.json();
+                
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:40px; color:#00f2ff;">M chưa có dữ liệu trong SQL Server. Hãy dùng nút + THÊM để tạo mới!</td></tr>';
+                    return;
+                }
 
-</div>
+                tbody.innerHTML = data.map(ev => `
+                    <tr>
+                        <td style="color: #00f2ff; font-weight: 800;">#${ev.id}</td>
+                        <td style="color: #fff; font-weight: 600;">${ev.title}</td>
+                        <td style="color: #cbd5e0;">${ev.date}</td>
+                        <td><span class="badge ${getStatusClass(ev.status)}">${ev.status}</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn-s" onclick="editEvent(${ev.id}, '${ev.title}')">Sửa</button>
+                                <button class="btn-x" onclick="deleteEvent(${ev.id})">Xóa</button>
+                                <button class="btn-c" onclick="showDetail(${ev.id})">Chi tiết</button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Lỗi kết nối API app.py. M kiểm tra Terminal xem Server chạy chưa!</td></tr>';
+            }
+        }
 
-<script>
+        // 2. Hàm thêm sự kiện
+        async function addEvent() {
+            const title = document.getElementById('ev-title').value;
+            const date = document.getElementById('ev-date').value;
+            const status = document.getElementById('ev-status').value;
 
-// LOAD DATA
-async function loadEvents(){
-    let res = await fetch("http://127.0.0.1:5001/api/events");
-    let data = await res.json();
+            if(!title || !date) return alert("Tuấn ơi, m nhập thiếu thông tin rồi!");
 
-    let html = "";
+            const res = await fetch(`${API_URL}/add`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ title, date, status })
+            });
 
-    data.forEach(e => {
-        html += `
-        <tr>
-            <td>${e.id}</td>
-            <td>${e.name}</td>
-            <td>
-                <button class="btn-edit">Sửa</button>
-                <button class="btn-delete" onclick="deleteEvent(${e.id})">Xóa</button>
-            </td>
-        </tr>`;
-    });
+            if(res.ok) {
+                location.reload(); // Tải lại trang để hiện dòng mới
+            }
+        }
 
-    document.getElementById("eventList").innerHTML = html;
-}
+        // 3. Hàm xóa sự kiện
+        async function deleteEvent(id) {
+            if(confirm(`M chắc chắn muốn xóa sự kiện #${id} khỏi Database của nhóm 10?`)) {
+                const res = await fetch(`${API_URL}/delete/${id}`, { method: 'DELETE' });
+                if(res.ok) loadEvents();
+            }
+        }
 
-// ADD
-async function addEvent(){
-    let name = document.getElementById("eventName").value;
+        // 4. Hàm sửa nhanh tên
+        async function editEvent(id, oldTitle) {
+            const newTitle = prompt("Nhập tên sự kiện mới:", oldTitle);
+            if (newTitle && newTitle !== oldTitle) {
+                await fetch(`${API_URL}/update/${id}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ title: newTitle })
+                });
+                loadEvents();
+            }
+        }
 
-    if(!name){
-        alert("Nhập tên sự kiện!");
-        return;
-    }
+        // 5. Hàm chi tiết (Modal hoặc Alert)
+        function showDetail(id) {
+            alert(`Đang mở chi tiết sự kiện ID: ${id}\nNhóm 10: Du, Hiếu, Tuấn, Anh.`);
+        }
 
-    await fetch("http://127.0.0.1:5001/api/events",{
-        method:"POST",
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({name:name})
-    });
+        // Định màu cho Badge trạng thái
+        function getStatusClass(status) {
+            if(status === 'LIVE NOW') return 'success';
+            if(status === 'GHI DANH') return 'primary';
+            return 'gray';
+        }
 
-    document.getElementById("eventName").value = "";
-    loadEvents();
-}
+        // Xử lý đăng xuất
+        function handleLogout() {
+            if(confirm("M muốn đăng xuất à?")) {
+                localStorage.removeItem('user');
+                window.location.href = "/Html/account/login.html";
+            }
+        }
 
-// DELETE
-async function deleteEvent(id){
-    if(confirm("Xóa sự kiện này?")){
-        await fetch(`http://127.0.0.1:5001/api/events/${id}`,{
-            method:"DELETE"
-        });
-        loadEvents();
-    }
-}
-
-loadEvents();
-
-</script>
-
+        // Tự động load khi mở trang
+        window.onload = loadEvents;
+    </script>
 </body>
 </html>

@@ -2,159 +2,195 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Thanh Toán An Toàn | Cyber-LMS Premium</title>
+    <title>Thanh Toán An Toàn | DHTA ACADEMY</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../CSS/checkout.css">
+    <link rel="stylesheet" href="../../CSS/layout/footer.css">
 </head>
-<body>
+<body class="checkout-page-bright">
 
-<nav class="navbar">
-    <div class="logo" onclick="location.href='index.html'">CODELEARN</div>
-    <a href="cart.html" class="back-link"><i class="fas fa-chevron-left"></i> Quay lại giỏ hàng</a>
+<nav class="navbar-bright">
+    <div class="nav-container">
+        <div class="logo-bright" onclick="location.href='index.html'">DHTA <span class="pink-text">ACADEMY</span></div>
+        <a href="cart.html" class="back-btn"><i class="fas fa-chevron-left"></i> Quay lại giỏ hàng</a>
+    </div>
 </nav>
 
-<div class="checkout-steps">
-    <div class="step done"><div class="step-circle"><i class="fas fa-check"></i></div> GIỎ HÀNG</div>
-    <div class="step active"><div class="step-circle">2</div> THANH TOÁN</div>
-    <div class="step"><div class="step-circle">3</div> HOÀN TẤT</div>
-</div>
-
 <div class="container">
-    <main>
-        <div class="section-box">
-            <h2><i class="fas fa-user-circle"></i> Thông tin học viên</h2>
-            <div class="form-row">
-                <div class="input-group">
-                    <label>Họ và Tên</label>
-                    <input type="text" id="user_name" placeholder="Nguyễn Mạnh Tuấn">
-                </div>
-                <div class="input-group">
-                    <label>Email liên hệ</label>
-                    <input type="email" id="user_email" placeholder="tuan@example.com">
-                </div>
-            </div>
-            <div class="input-group">
-                <label>Số điện thoại</label>
-                <input type="text" id="user_phone" placeholder="09xx xxx xxx">
-            </div>
+    <div class="checkout-steps-container">
+        <div class="step-item completed">
+            <div class="step-icon"><i class="fas fa-check"></i></div>
+            <div class="step-label">GIỎ HÀNG</div>
         </div>
-
-        <div class="section-box">
-            <h2><i class="fas fa-wallet"></i> Phương thức thanh toán</h2>
-            <div class="payment-options">
-                <div class="pay-card active" onclick="switchPay('bank', this)">
-                    <i class="fas fa-university"></i>
-                    <strong>Ngân hàng</strong>
-                </div>
-                <div class="pay-card" onclick="switchPay('momo', this)">
-                    <i class="fas fa-mobile-alt"></i>
-                    <strong>Ví MoMo</strong>
-                </div>
-            </div>
-
-            <div class="qr-display">
-                <p id="pay-text" style="font-size: 14px; opacity: 0.7; margin-bottom: 15px;">Quét mã QR để chuyển khoản Vietcombank</p>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=CyberLMS_Tuấn" id="qr-img">
-                <p style="font-size: 13px; margin-top: 10px;">Nội dung thanh toán:</p>
-                <div class="order-code" id="order-id">LMS9999</div>
-            </div>
+        <div class="step-line active"></div>
+        <div class="step-item active">
+            <div class="step-icon">2</div>
+            <div class="step-label">THANH TOÁN</div>
         </div>
-    </main>
-
-  <aside>
-    <div class="summary-card">
-        <h3>Đơn hàng của bạn</h3>
-        
-        <div id="order-list"></div>
-
-        <!-- 🔥 MÃ GIẢM GIÁ -->
-        <div class="coupon-box">
-            <input id="couponCode" placeholder="Nhập mã giảm giá...">
-            <button onclick="applyCoupon()">Áp dụng</button>
+        <div class="step-line"></div>
+        <div class="step-item">
+            <div class="step-icon">3</div>
+            <div class="step-label">HOÀN TẤT</div>
         </div>
-
-        <div id="discountInfo" class="discount-info"></div>
-
-        <!-- 💰 TỔNG TIỀN -->
-        <div class="total-price">
-            <span>Tổng tiền:</span>
-            <span id="total-amount" style="color: var(--primary);">0 đ</span>
-        </div>
-
-        <button class="btn-confirm" onclick="processCheckout()">XÁC NHẬN THANH TOÁN</button>
-
-        <p style="text-align: center; font-size: 11px; color: #777; margin-top: 15px;">
-            <i class="fas fa-lock"></i> Thanh toán an toàn qua cổng CyberPay
-        </p>
     </div>
-</aside>
+
+    <div class="checkout-layout">
+        <main class="checkout-main">
+            <div class="white-card">
+                <h2 class="card-title"><i class="fas fa-user-circle"></i> Thông tin học viên</h2>
+                <div class="input-field">
+                    <label>Tên đăng nhập hệ thống</label>
+                    <input type="text" id="user_name" readonly value="admin">
+                </div>
+            </div>
+
+            <div class="white-card">
+                <h2 class="card-title"><i class="fas fa-wallet"></i> Phương thức thanh toán</h2>
+                <div class="payment-grid">
+                    <div class="pay-method active" id="bank-btn" onclick="switchPay('bank', this)">
+                        <i class="fas fa-university"></i>
+                        <span>Ngân hàng</span>
+                    </div>
+                    <div class="pay-method" id="momo-btn" onclick="switchPay('momo', this)">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Ví MoMo</span>
+                    </div>
+                </div>
+
+                <div class="qr-section">
+                    <p id="pay-guide-text">Quét mã QR để chuyển khoản Ngân hàng</p>
+                    <div class="qr-container">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=VCB_TUAN" id="qr-img">
+                    </div>
+                    <p class="order-id-label">Nội dung chuyển khoản: <span id="lms-code">LMS-WAITING</span></p>
+                </div>
+            </div>
+        </main>
+
+        <aside class="checkout-sidebar">
+            <div class="white-card summary-card">
+                <h3 class="summary-title">Đơn hàng của bạn</h3>
+                <div id="checkout-items-list" class="items-list">
+                    </div>
+
+                <div class="coupon-bright-box">
+                    <p class="coupon-title">BẠN CÓ MÃ GIẢM GIÁ?</p>
+                    <div class="coupon-form">
+                        <input type="text" id="cp-input" placeholder="Nhập mã voucher...">
+                        <button onclick="applyVoucher()">ÁP DỤNG</button>
+                    </div>
+                    <div id="cp-msg"></div>
+                </div>
+
+                <div class="total-summary">
+                    <div class="total-row">
+                        <span class="total-label">Tổng tiền thanh toán:</span>
+                        <span id="final-total" class="total-price">0 đ</span>
+                    </div>
+                </div>
+
+                <button class="btn-checkout-final" id="btn-submit" onclick="handleCheckout()">XÁC NHẬN THANH TOÁN</button>
+            </div>
+        </aside>
+    </div>
 </div>
 
 <script>
-    // 1. Tải đơn hàng từ giỏ hàng
-    function initCheckout() {
+    const API = "http://127.0.0.1:5001/api";
+    let basePrice = 0;
+    let finalPrice = 0;
+
+    function init() {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const container = document.getElementById('order-list');
-        const totalDisp = document.getElementById('total-amount');
         const user = JSON.parse(localStorage.getItem('user'));
-
         if(user) document.getElementById('user_name').value = user.username;
-        if(cart.length === 0) {
-            alert("Giỏ hàng trống!"); window.location.href = 'learning.html'; return;
-        }
+        if(cart.length === 0) { window.location.href = 'learning.html'; return; }
 
-        let total = 0;
-        container.innerHTML = cart.map(item => {
-            total += parseInt(item.price);
-            return `<div class="order-item"><span>${item.title}</span><b>${Number(item.price).toLocaleString('vi-VN')} đ</b></div>`;
+        let t = 0;
+        document.getElementById('checkout-items-list').innerHTML = cart.map(i => {
+            t += parseInt(i.price);
+            return `<div class="item-line"><span>${i.title}</span><b>${Number(i.price).toLocaleString()}đ</b></div>`;
         }).join('');
 
-        totalDisp.innerText = total.toLocaleString('vi-VN') + " đ";
-        document.getElementById('order-id').innerText = "LMS" + Math.floor(1000 + Math.random() * 8999);
+        basePrice = t;
+        finalPrice = t;
+        document.getElementById('final-total').innerText = finalPrice.toLocaleString() + " đ";
     }
 
-    // 2. Đổi QR
-    function switchPay(type, el) {
-        document.querySelectorAll('.pay-card').forEach(c => c.classList.remove('active'));
-        el.classList.add('active');
-        const txt = document.getElementById('pay-text');
-        const img = document.getElementById('qr-img');
+    async function applyVoucher() {
+        const code = document.getElementById('cp-input').value.trim();
+        const msg = document.getElementById('cp-msg');
+        if(!code) return;
 
-        if(type === 'momo') {
-            txt.innerText = "Mở MoMo quét mã để thanh toán";
-            img.src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Momo_Payment";
-        } else {
+        try {
+            const res = await fetch(`${API}/vouchers/verify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: code, total: basePrice })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                finalPrice = data.new_total;
+                msg.innerText = "✅ " + data.msg;
+                msg.style.color = "#2ecc71";
+                document.getElementById('final-total').innerText = finalPrice.toLocaleString() + " đ";
+            } else {
+                msg.innerText = "❌ " + data.msg;
+                msg.style.color = "#e74c3c";
+            }
+        } catch (e) { msg.innerText = "Lỗi kết nối!"; }
+    }
+
+    function switchPay(type, el) {
+        document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('active'));
+        el.classList.add('active');
+        const img = document.getElementById('qr-img');
+        const txt = document.getElementById('pay-guide-text');
+        if(type === 'bank') {
             txt.innerText = "Quét mã QR để chuyển khoản Ngân hàng";
-            img.src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Bank_Payment";
+            img.src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=VCB_TUAN_BRIGHT";
+        } else {
+            txt.innerText = "Mở MoMo quét mã thanh toán";
+            img.src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=MOMO_TUAN_BRIGHT";
         }
     }
 
-    // 3. Xử lý thanh toán + Lưu lịch sử
-    function processCheckout() {
-        if(!document.getElementById('user_name').value) { alert("Nhập tên nhé!"); return; }
+    async function handleCheckout() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const user = JSON.parse(localStorage.getItem('user'));
+        const btn = document.getElementById('btn-submit');
 
-        const cart = JSON.parse(localStorage.getItem('cart'));
-        const total = document.getElementById('total-amount').innerText;
-        const id = document.getElementById('order-id').innerText;
-
-        // Lưu vào History
-        const order = { id, total, date: new Date().toLocaleString('vi-VN'), items: cart, status: 'Hoàn tất' };
-        let history = JSON.parse(localStorage.getItem('orderHistory')) || [];
-        history.unshift(order);
-        localStorage.setItem('orderHistory', JSON.stringify(history));
-
-        const btn = document.querySelector('.btn-confirm');
-        btn.innerText = "ĐANG XÁC THỰC...";
+        btn.innerText = "ĐANG XỬ LÝ...";
         btn.disabled = true;
 
-        setTimeout(() => {
-            alert("🎉 Thanh toán thành công! Chúc bạn học tốt.");
-            localStorage.removeItem('cart');
-            window.location.href = 'index.html';
-        }, 1500);
+        try {
+            const res = await fetch(`${API}/place-order`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    customer_name: user.username,
+                    items: cart,
+                    total_amount: finalPrice
+                })
+            });
+            if (res.ok) {
+                alert("🎉 Đặt hàng thành công!");
+                localStorage.removeItem('cart');
+                window.location.href = 'order-history.html';
+            }
+        } catch (e) { alert("Lỗi kết nối!"); btn.disabled = false; }
     }
 
-    window.onload = initCheckout;
+    window.onload = init;
 </script>
+<div id="footer"></div>
+
+    <script>
+        fetch("../layout/footer.html")
+        .then(res => res.text())
+        .then(data => {
+        document.getElementById("footer").innerHTML = data;
+        });
+    </script>
 </body>
 </html>
